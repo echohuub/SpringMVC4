@@ -49,4 +49,10 @@ public class MyMvcConfig extends WebMvcConfigurerAdapter { // 继承WebMvcConfig
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/index").setViewName("/index");
     }
+
+    @Override
+    public void configurePathMatch(PathMatchConfigurer configurer) {
+        // 在SpringMVC中，路径参数如果带"."的话，"."后面的值将被忽略。
+        configurer.setUseSuffixPatternMatch(false);
+    }
 }
