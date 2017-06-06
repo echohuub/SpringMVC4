@@ -3,10 +3,14 @@
  */
 package com.hqb.springmvc4;
 
+import com.hqb.springmvc4.interceptor.DemoInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
@@ -14,9 +18,9 @@ import org.springframework.web.servlet.view.JstlView;
  * Created by heqingbao on 2017/6/6.
  */
 @Configuration
-@EnableWebMvc
+@EnableWebMvc // 开启SpringMVC支持，若无此句，重写WebMvcConfigurerAdapter方法无效
 @ComponentScan("com.hqb.springmvc4")
-public class MyMvcConfig {
+public class MyMvcConfig extends WebMvcConfigurerAdapter { // 继承WebMvcConfigurerAdapter类，重写其方法可对SpringMVC进行配置
 
     @Bean
     public InternalResourceViewResolver viewResolver() {
@@ -27,4 +31,19 @@ public class MyMvcConfig {
         return viewResolver;
     }
 
+    @Bean // 配置拦截器的Bean
+    public DemoInterceptor demoInterceptor() {
+        return new DemoInterceptor();
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) { // 重写addInterceptors方法，注册拦截器
+        registry.addInterceptor(demoInterceptor());
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // addResourceHandler指的是对外暴露的访问路径，addResourceLocations指的是文件放置的目录
+        registry.addResourceHandler("/assets/**").addResourceLocations("classpath:/assets/");
+    }
 }
