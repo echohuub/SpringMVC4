@@ -7,10 +7,7 @@ import com.hqb.springmvc4.interceptor.DemoInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
@@ -45,5 +42,11 @@ public class MyMvcConfig extends WebMvcConfigurerAdapter { // 继承WebMvcConfig
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // addResourceHandler指的是对外暴露的访问路径，addResourceLocations指的是文件放置的目录
         registry.addResourceHandler("/assets/**").addResourceLocations("classpath:/assets/");
+    }
+
+    // 无任何业务处理，只是简单的页面转向，这样更简洁，管理更集中
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/index").setViewName("/index");
     }
 }
